@@ -27,7 +27,7 @@
 </head>
 
 <body>
-    <form action="" method="post">
+    <form action="" method="get">
         <label>Mahasiswa : </label>
         <select id="nama" name="selector_nama">
             <option value="" selected>-- Pilih Mahasiswa --</option>
@@ -39,12 +39,35 @@
             //panggil method ShowMahasiswa
             $result = $mahasiswa->ShowMahasiswa();
 
+            $active = "disabled"; // untuk men-disable button
+
+            // logic untuk membuat selected pada nama yang dipilih
+            $nama_mhs = "";
+            if(isset($_GET['selector_nama'])) {
+                if ($_GET['selector_nama'] != "") {
+                    $active = "";
+                    //panggil method ShowMahasiswa
+                    $result3 = $mahasiswa->SearchMahasiswa($_GET['selector_nama']);
+                    while ($row = $result3->fetch_assoc()) {
+                        $nama_mhs = $row['nama'];
+                        echo $nama_mhs;
+                    }
+                    
+                }
+            }
+
             while ($row = $result->fetch_assoc()) {
-                echo "<option value='" . $row['nrp'] . "'>" . $row['nama'] . "</option>";
+                if ($nama_mhs == $row['nama']) {
+                    echo "<option value='" . $row['nrp'] . "' selected>" . $row['nama'] . "</option>";
+
+                }
+                else {
+                    echo "<option value='" . $row['nrp'] . "'>" . $row['nama'] . "</option>";
+                }
             }
             ?>
         </select>
-        <input type="submit" value="Pilih" name="id">
+        <input type="submit" value="Pilih">
     </form>
     <br>
     <table>
@@ -91,9 +114,9 @@
     </table>
 
     <br>
-    <form action="ubah-jadwal.php" method="get" id="form-ubah">
+    <form action="ubah_jadwal.php" method="get" id="form-ubah">
         <input type="hidden" name="nrp" value="">
-        <button id="btn_ubah">Ubah Jadwal</button>
+        <button id="btn_ubah" <?php echo $active ?> >Ubah Jadwal</button>
     </form>
 
     <script>

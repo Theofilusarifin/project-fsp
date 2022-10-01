@@ -14,5 +14,15 @@ require_once("koneksi.php");
             $res = $this->con->query($sql);
             return $res;
         }
+
+        public function SearchMahasiswa($nrp) 
+        {
+            $sql = "SELECT * FROM mahasiswa WHERE nrp = ?";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bind_param('s', $nrp);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            return $res;
+        }
     }
 ?>
