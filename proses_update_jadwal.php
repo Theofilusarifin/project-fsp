@@ -12,8 +12,8 @@ if (isset($_POST['submit'])) {
         $jadwal->DeleteJadwal($nrp);
         foreach ($_POST['checkbox_jadwal'] as $value) {
             $data = explode("_", $value);
-            $idjam_kuliah = $data[0];
-            $idhari = $data[1];
+            $idhari = $data[0];
+            $idjam_kuliah = $data[1];
             $jadwal->InsertJadwal($nrp, $idjam_kuliah, $idhari);
         }
         header("Location: index.php");

@@ -41,22 +41,19 @@
         $jam_kuliah = new Jam_Kuliah("localhost", "root", "", "project_uts");
         $jadwal = new Jadwal("localhost", "root", "", "project_uts");
 
-        $nama_mhs = '';
-        //panggil method SearchMahasiswa
-        $result = $mahasiswa->SearchMahasiswa($_GET['nrp']);
-        while ($row = $result->fetch_assoc()) {
-            $nama_mhs = $row['nama'];
-        }
+        // Get Mahasiswa Name
+        $mahasiswa_name = $mahasiswa->SearchMahasiswa($_GET['nrp'])->fetch_assoc()['nama'];
 
+        // Display Mahasiswa Name
         echo "<label>Mahasiswa : </label>";
-        echo $_GET['nrp'] . " - " . $nama_mhs;
+        echo $_GET['nrp'] . " - " . $mahasiswa_name;
         echo "<br><br>";
 
-        // Get current student jadwal
+        // Get current mahasiswa jadwal
         $jadwal_kuliah_mahasiwa = [];
-        $result_jadwal = $jadwal->SearchJadwal($_GET['nrp']);
-        // Pass all current student jadwal to the array
-        while ($row = $result_jadwal->fetch_assoc()) {
+        $data_jadwal = $jadwal->SearchJadwal($_GET['nrp']);
+        // Pass all current mahasiswa jadwal to the array
+        while ($row = $data_jadwal->fetch_assoc()) {
             $jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$row['idhari']] = 1;
         }
 
@@ -64,11 +61,11 @@
         $jadwal_keseluruhan = [];
         $range_jam_kuliah = [];
         // Fill jadwal keseluruhan
-        $result_jam_kuliah = $jam_kuliah->ShowJamKuliah();
-        while ($row = $result_jam_kuliah->fetch_assoc()) {
-            $result_hari = $hari->ShowHari();
+        $data_jam_kuliah = $jam_kuliah->ShowJamKuliah();
+        while ($row = $data_jam_kuliah->fetch_assoc()) {
+            $data_hari = $hari->ShowHari();
             $range_jam_kuliah[] = date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai']));
-            while ($col = $result_hari->fetch_assoc()) {
+            while ($col = $data_hari->fetch_assoc()) {
                 $jadwal_keseluruhan[$row['idjam_kuliah']][$col['idhari']] = isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']]) ? 1 : 0;
             }
         }
