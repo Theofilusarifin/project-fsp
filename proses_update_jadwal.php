@@ -10,8 +10,9 @@ if (isset($_POST['submit'])) {
         $nrp = $_POST['nrp'];
         // Delete all previous selected mahasiswa jadwal
         $jadwal->DeleteJadwal($nrp);
-        // Input all new many to many jadwal data
+        // Check wheter POST jadwal is empty or not
         if(!empty($_POST['checkbox_jadwal'])){
+            // Input all new many to many jadwal data
             foreach ($_POST['checkbox_jadwal'] as $value) {
                 $data = explode("_", $value);
                 $idhari = $data[0];
@@ -19,7 +20,7 @@ if (isset($_POST['submit'])) {
                 $jadwal->InsertJadwal($nrp, $idjam_kuliah, $idhari);
             }
         }
-        // After finished, redirect to index
-        header("Location: index.php");
+        // After finished, redirect to index with parameter selected nrp for QOL
+        header("Location: index.php?selector_nrp=$nrp");
 }
 ?>

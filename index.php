@@ -129,8 +129,8 @@
             echo "<td>" . date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai'])) . "</td>";
             $data_hari = $hari->ShowHari();
             while ($col = $data_hari->fetch_assoc()) {
-                $is_ticked = (isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']])) ? '✔' : '';
                 // If the jadwal is match then give a tick symbol ✔
+                $is_ticked = (isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']])) ? '✔' : '';
                 echo "<td>$is_ticked</td>";
             }
             echo "</tr>";

@@ -93,9 +93,9 @@
             // Define hari prequisities
             foreach ($jam_kuliah as $idhari => $hari) {
                 echo "<td>";
-                // Check wheter there is jadwal or nor, if any give checked
+                // Check wheter there is jadwal or not? if any, give checked
                 $checked = isset($jadwal_kuliah_mahasiwa[$idjam_kuliah][$idhari]) ? "checked" : "";
-                // Set checkbox value intp idjamkuliah_idhari, we will explode it on the proses
+                // Set checkbox value into idjamkuliah_idhari, we will explode it on the process
                 $value = $idjam_kuliah . "_" . $idhari;
                 echo "<input type='checkbox' name='checkbox_jadwal[]' value='$value' $checked>";
                 echo "</td>";
@@ -106,7 +106,7 @@
         echo "</table>";
         ?>
         <br>
-        <!-- Input hidden to pass select mahasiswa NRP to proses -->
+        <!-- Input hidden to pass selected mahasiswa NRP to the process -->
         <input type="hidden" name="nrp" value="<?= $_GET['nrp'] ?>">
         <input type="submit" name="submit" value="Ubah Jadwal">
     </form>
