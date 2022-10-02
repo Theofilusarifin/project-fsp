@@ -84,7 +84,7 @@
     <!-- JQUERY SCRIPT -->
     <script>
         $("#btn_ubah").on("click", function() {
-            // Pass selected NRP on FORM SELECT MAHASISWA into input hidden in FORM UBAH JADWAL
+            // Pass selected NRP in FORM SELECT MAHASISWA into input hidden in FORM UBAH JADWAL
             $("input[name='nrp']").attr("value", $('select[name=selector_nrp] option').filter(':selected').val());
             // Submit FORM UBAH JADWAL
             $("form-ubah").submit();
