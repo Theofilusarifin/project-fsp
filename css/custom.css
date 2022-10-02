@@ -1,0 +1,149 @@
+/* Table Styling */
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.42em;
+    color: #000000;
+    background-color: #DBDFFD;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 300;
+    line-height: 1em;
+    text-align: center;
+}
+
+.container th h1 {
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center;
+    color: white;
+}
+
+.container td {
+    font-weight: normal;
+    font-size: 1em;
+    -webkit-box-shadow: 0 2px 2px -2px #0E1119;
+    -moz-box-shadow: 0 2px 2px -2px #0E1119;
+    box-shadow: 0 2px 2px -2px #0E1119;
+}
+
+.container {
+    text-align: center;
+    overflow: scroll;
+    width: 80%;
+    margin: 0 auto;
+    display: table;
+}
+
+.container td {
+    padding-bottom: 2%;
+    padding-top: 2%;
+    padding-left: 2%;
+}
+
+th {
+    padding-bottom: 2%;
+    padding-top: 2%;
+}
+
+/* Background-color of the odd rows */
+.container tr:nth-child(odd) {
+    background-color: #646FD4;
+}
+
+/* Background-color of the even rows */
+.container tr:nth-child(even) {
+    background-color: #9BA3EB;
+}
+
+.container th {
+    background-color: #242F9B;
+}
+
+.container td:first-child {
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    width: 10em;
+}
+
+.container tr:hover {
+    background-color: #083AA9;
+    -webkit-box-shadow: 0 6px 6px -6px #0E1119;
+    -moz-box-shadow: 0 6px 6px -6px #0E1119;
+    box-shadow: 0 6px 6px -6px #0E1119;
+}
+
+/* .container td:hover {
+background-color: #FFF842;
+color: #403E10;
+font-weight: bold;
+
+box-shadow: #7F7C21 -1px 1px, #7F7C21 -2px 2px, #7F7C21 -3px 3px, #7F7C21 -4px 4px, #7F7C21 -5px 5px, #7F7C21 -6px 6px;
+transform: translate3d(6px, -6px, 0);
+
+transition-delay: 0s;
+    transition-duration: 0.4s;
+    transition-property: all;
+transition-timing-function: line;
+} */
+
+@media (max-width: 800px) {
+
+    .container th{
+        font-size: small;
+    }
+    .container td:first-child {
+        width: 5em;
+        font-size: small;
+    }
+}
+
+/* Button Styling */
+#btn_ubah{
+    border-radius: 8px;
+    background-color: #242F9B;
+    color: white;
+    border: 0px;
+    padding: 14px 28px;
+    font-size: 16px;
+    margin-left: 10%;
+    cursor: pointer;
+}
+
+#btn_pilih{
+    border-radius: 8px;
+    background-color: #242F9B;
+    color: white;
+    border: 0px;
+    padding: 7px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+@media (max-width: 800px) {
+    #btn_ubah{
+        font-size: 12px;
+        margin-left: 10%;
+        padding: 10px 20px;
+    }
+}
+
+/* Label Styling */
+label{
+    font-weight: bold;
+    font-size: 24px;
+    color: #083AA9;
+}
+
+#label1{
+    padding-left: 10%;
+}
+
+/* Select Styling */

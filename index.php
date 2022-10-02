@@ -7,29 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <style>
-        table,
-        td,
-        th {
-            border: 1px solid black;
-            text-align: left;
-            /* width: 35rem; */
-            height: 2rem;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
 </head>
 
 <body>
     <!-- FORM SELECT MAHASISWA -->
     <form action="" method="get">
-        <label>Mahasiswa : </label>
+        <label id="label1">Mahasiswa : </label>
         <select id="nrp_mahasiswa" name="selector_nrp">
             <option value="" selected>-- Pilih Mahasiswa --</option>
             <?php
@@ -63,12 +47,12 @@
             }
             ?>
         </select>
-        <input type="submit" value="Pilih">
+        <input type="submit" value="Pilih" id="btn_pilih">
     </form>
 
     <br>
     <!-- SCHEDULE TABLE -->
-    <table>
+    <table class="container">
         <?php
         display_data($selected_nrp);
         ?>
@@ -105,19 +89,19 @@
         $jadwal = new Jadwal("localhost", "root", "", "project_uts");
 
         // Get current student jadwal
-        $jadwal_kuliah_mahasiwa = [];
+        $jadwal_kuliah_mahasiswa = [];
         $selected_jadwal = $jadwal->SearchJadwal($nrp);
         // Pass all current student jadwal to the array
         while ($row = $selected_jadwal->fetch_assoc()) {
-            $jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$row['idhari']] = 1;
+            $jadwal_kuliah_mahasiswa[$row['idjam_kuliah']][$row['idhari']] = 1;
         }
 
         echo "<tr>";
-        echo "<td></td>";
+        echo "<th></th>";
         $data_hari = $hari->ShowHari();
         //  Display row 1 that filled with all hari in database
         while ($row = $data_hari->fetch_assoc()) {
-            echo "<td>" . $row['nama'] . "</td>";
+            echo "<th><h1>" . $row['nama'] . "</h1></th>";
         }
         echo "</tr>";
 
@@ -130,7 +114,7 @@
             $data_hari = $hari->ShowHari();
             while ($col = $data_hari->fetch_assoc()) {
                 // If the jadwal is match then give a tick symbol ✔
-                $is_ticked = (isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']])) ? '✔' : '';
+                $is_ticked = (isset($jadwal_kuliah_mahasiswa[$row['idjam_kuliah']][$col['idhari']])) ? '✔' : '';
                 echo "<td>$is_ticked</td>";
             }
             echo "</tr>";

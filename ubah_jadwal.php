@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <title>Ubah Jadwal</title>
 
-    <style>
+    <!-- <style>
         table,
         td,
         th {
@@ -22,11 +23,17 @@
         table {
             border-collapse: collapse;
         }
-    </style>
+    </style> -->
 
 </head>
 
 <body>
+    <?php
+    //Return to index.php if user direct manually to ubah_jadwal.php without submit nrp from the index.php
+        if(!isset($_GET['nrp'])){
+            header('Location: index.php');
+        }
+    ?>
     <form action="proses_update_jadwal.php" method="post">
         <?php
         //  Define all the require
@@ -45,8 +52,8 @@
         $mahasiswa_name = $mahasiswa->SearchMahasiswa($_GET['nrp'])->fetch_assoc()['nama'];
 
         // Display Mahasiswa Name
-        echo "<label>Mahasiswa : </label>";
-        echo $_GET['nrp'] . " - " . $mahasiswa_name;
+        echo "<label id='label1'>Mahasiswa : </label>";
+        echo "<label>" . $_GET['nrp'] . " - " . $mahasiswa_name . "</label>";
         echo "<br><br>";
 
         // Get current mahasiswa jadwal
@@ -72,14 +79,14 @@
             }
         }
 
-        echo "<table>";
+        echo "<table class='container'>";
 
         echo "<tr>";
-        echo "<td></td>";
+        echo "<th></th>";
         $data_hari = $hari->ShowHari();
         //  Display row 1 that filled with all hari in database
         while ($row = $data_hari->fetch_assoc()) {
-            echo "<td>" . $row['nama'] . "</td>";
+            echo "<th><h1>" . $row['nama'] . "</h1></th>";
         }
         echo "</tr>";
 
@@ -108,7 +115,7 @@
         <br>
         <!-- Input hidden to pass selected mahasiswa NRP to the process -->
         <input type="hidden" name="nrp" value="<?= $_GET['nrp'] ?>">
-        <input type="submit" name="submit" value="Ubah Jadwal">
+        <input type="submit" name="submit" value="Ubah Jadwal" id="btn_ubah">
     </form>
 
 </body>
