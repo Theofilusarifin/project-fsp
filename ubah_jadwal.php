@@ -62,42 +62,51 @@
         $range_jam_kuliah = [];
         // Fill jadwal keseluruhan
         $data_jam_kuliah = $jam_kuliah->ShowJamKuliah();
+        // Model array [idjam_kuliah][idhari]
         while ($row = $data_jam_kuliah->fetch_assoc()) {
             $data_hari = $hari->ShowHari();
             $range_jam_kuliah[] = date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai']));
             while ($col = $data_hari->fetch_assoc()) {
+                // If there is jadwal on currect 2d index, fill the array with 1
                 $jadwal_keseluruhan[$row['idjam_kuliah']][$col['idhari']] = isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']]) ? 1 : 0;
             }
         }
 
         echo "<table>";
 
-        $show_hari = $hari->ShowHari();
         echo "<tr>";
         echo "<td></td>";
-        //nampilin harinya dalam satu baris
-        while ($row = $show_hari->fetch_assoc()) {
+        $data_hari = $hari->ShowHari();
+        //  Display row 1 that filled with all hari in database
+        while ($row = $data_hari->fetch_assoc()) {
             echo "<td>" . $row['nama'] . "</td>";
         }
         echo "</tr>";
 
+        // Display row 2-n that filled with jam kuliah and selected jadwal 
         $i = 0;
+        // Define jam_kuliah prequisities
         foreach ($jadwal_keseluruhan as $idjam_kuliah => $jam_kuliah) {
             echo "<tr>";
             echo "<td>" . $range_jam_kuliah[$i] . "</td>";
             $i += 1;
+            // Define hari prequisities
             foreach ($jam_kuliah as $idhari => $hari) {
                 echo "<td>";
+                // Check wheter there is jadwal or nor, if any give checked
                 $checked = isset($jadwal_kuliah_mahasiwa[$idjam_kuliah][$idhari]) ? "checked" : "";
+                // Set checkbox value intp idjamkuliah_idhari, we will explode it on the proses
                 $value = $idjam_kuliah . "_" . $idhari;
                 echo "<input type='checkbox' name='checkbox_jadwal[]' value='$value' $checked>";
                 echo "</td>";
             }
             echo "</tr>";
         }
+
         echo "</table>";
         ?>
         <br>
+        <!-- Input hidden to pass select mahasiswa NRP to proses -->
         <input type="hidden" name="nrp" value="<?= $_GET['nrp'] ?>">
         <input type="submit" name="submit" value="Ubah Jadwal">
     </form>
