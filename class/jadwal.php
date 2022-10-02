@@ -11,7 +11,7 @@ require_once("koneksi.php");
         {
             $sql = "SELECT * FROM jadwal WHERE nrp = ? ORDER BY idjam_kuliah, idhari";
             $stmt = $this->con->prepare($sql);
-            $stmt->bind_param('s', $nrp);
+            $stmt->bind_param('i', $nrp);
             $stmt->execute();
             $res = $stmt->get_result();
             return $res;

@@ -27,104 +27,116 @@
 </head>
 
 <body>
+    <!-- FORM SELECT MAHASISWA -->
     <form action="" method="get">
         <label>Mahasiswa : </label>
-        <select id="nama" name="selector_nama">
+        <select id="nrp_mahasiswa" name="selector_nrp">
             <option value="" selected>-- Pilih Mahasiswa --</option>
             <?php
+            // Define the require
             require("class/mahasiswa.php");
-            //ciptain object mahasiswa, panggil class Mahasiswa
+            // Create object from class 
             $mahasiswa = new Mahasiswa("localhost", "root", "", "project_uts");
 
-            //panggil method ShowMahasiswa
-            $result = $mahasiswa->ShowMahasiswa();
-
-            $active = "disabled"; // untuk men-disable button
-
-            // logic untuk membuat selected pada nama yang dipilih
-            $nama_mhs = "";
-            if(isset($_GET['selector_nama'])) {
-                if ($_GET['selector_nama'] != "") {
-                    $active = "";
-                    //panggil method ShowMahasiswa
-                    $result3 = $mahasiswa->SearchMahasiswa($_GET['selector_nama']);
-                    while ($row = $result3->fetch_assoc()) {
-                        $nama_mhs = $row['nama'];
-                        echo $nama_mhs;
-                    }
-                    
+            // Define prequisities data
+            $selected_nrp = 0;
+            $is_disabled = "disabled";
+            // Check if there any nrp that already selected
+            if (isset($_GET['selector_nrp'])) {
+                if ($_GET['selector_nrp'] != "") {
+                    $selected_nrp = $_GET['selector_nrp'];
+                    $is_disabled = "";
                 }
             }
 
-            while ($row = $result->fetch_assoc()) {
-                if ($nama_mhs == $row['nama']) {
-                    echo "<option value='" . $row['nrp'] . "' selected>" . $row['nama'] . "</option>";
-
-                }
-                else {
-                    echo "<option value='" . $row['nrp'] . "'>" . $row['nama'] . "</option>";
-                }
+            // Get all mahasiswa data
+            $data_mahasiswa = $mahasiswa->ShowMahasiswa();
+            // Passing data to the select box
+            while ($mahasiswa = $data_mahasiswa->fetch_assoc()) {
+                // Store each mahasiswa data upon itteration
+                $nama_mahasiswa = $mahasiswa['nama'];
+                $nrp_mahasiswa = $mahasiswa['nrp'];
+                // Check if current mahasiswa is selected or not
+                $is_selected = ($nrp_mahasiswa == $selected_nrp) ? 'selected' : '';
+                // Pass mahasiswa name to the select box
+                echo "<option value='$nrp_mahasiswa' $is_selected>$nama_mahasiswa</option>";
             }
             ?>
         </select>
         <input type="submit" value="Pilih">
     </form>
+
     <br>
+    <!-- SCHEDULE TABLE -->
     <table>
         <?php
-        require("class/hari.php");
-        //ciptain object hari, panggil class hari
-        $hari = new Hari("localhost", "root", "", "project_uts");
-
-        //panggil method ShowHari
-        $result1 = $hari->ShowHari();
-        echo "<tr>";
-        echo "<td>";
-        echo "</td>";
-
-        //nampilin harinya dalam satu baris
-        while ($row = $result1->fetch_assoc()) {
-            echo "<td>";
-            echo $row['nama'];
-            echo "</td>";
-        }
-        echo "</tr>";
-
-        require("class/jam_kuliah.php");
-        //ciptain object jam_kuliah, panggil class Jam_Kuliah
-        $jam_kuliah = new Jam_Kuliah("localhost", "root", "", "project_uts");
-        //panggil method ShowJamKuliah
-        $result2 = $jam_kuliah->ShowJamKuliah();
-
-        //nampilin jam kuliahnya, kalo kurang rapi mohon maap, bisa dibantu rapihin yak
-        while ($row = $result2->fetch_assoc()) {
-            echo "<tr";
-            echo "<td>";
-            echo "</td>";
-            echo "<td>";
-            echo date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai']));
-            echo "</td>";
-            for ($i = 0; $i < mysqli_num_rows($result1); $i++) {
-                echo "<td>";
-                echo "</td>";
-            }
-            echo "</tr>";
-        }
+        display_data($selected_nrp);
         ?>
     </table>
-
     <br>
+    
+    <!-- FORM UBAH JADWAL -->
     <form action="ubah_jadwal.php" method="get" id="form-ubah">
         <input type="hidden" name="nrp" value="">
-        <button id="btn_ubah" <?php echo $active ?> >Ubah Jadwal</button>
+        <button id="btn_ubah" <?php echo $is_disabled ?>>Ubah Jadwal</button>
     </form>
 
+    <!-- JQUERY SCRIPT -->
     <script>
         $("#btn_ubah").on("click", function() {
+            // Pass selected NRP on FORM SELECT MAHASISWA into input hidden in FORM UBAH JADWAL
             $("input[name='nrp']").attr("value", $('select[name=selector_nama] option').filter(':selected').val());
+            // Submit FORM UBAH JADWAL
             $("form-ubah").submit();
         });
     </script>
+
+    <?php
+    function display_data($nrp)
+    {
+        //  Define all the require
+        require("class/hari.php");
+        require("class/jam_kuliah.php");
+        require("class/jadwal.php");
+
+        //Create objects from class
+        $hari = new Hari("localhost", "root", "", "project_uts");
+        $jam_kuliah = new Jam_Kuliah("localhost", "root", "", "project_uts");
+        $jadwal = new Jadwal("localhost", "root", "", "project_uts");
+
+        // Get current student jadwal
+        $jadwal_kuliah_mahasiwa = [];
+        $selected_jadwal = $jadwal->SearchJadwal($nrp);
+        // Pass all current student jadwal to the array
+        while ($row = $selected_jadwal->fetch_assoc()) {
+            $jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$row['idhari']] = 1;
+        }
+
+        echo "<tr>";
+        echo "<td></td>";
+        $data_hari = $hari->ShowHari();
+        //  Display row 1 that filled with all hari in database
+        while ($row = $data_hari->fetch_assoc()) {
+            echo "<td>" . $row['nama'] . "</td>";
+        }
+        echo "</tr>";
+
+        // Display row 2-n that filled with jam kuliah and selected jadwal 
+        $data_jam_kuliah = $jam_kuliah->ShowJamKuliah();
+        while ($row = $data_jam_kuliah->fetch_assoc()) {
+            echo "<tr>";
+            // Display the range jam kuliah on the first col
+            echo "<td>" . date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai'])) . "</td>";
+            $data_hari = $hari->ShowHari();
+            while ($col = $data_hari->fetch_assoc()) {
+                $is_ticked = (isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']])) ? '✔' : '';
+                // If the jadwal is match then give a tick symbol ✔
+                echo "<td>$is_ticked</td>";
+            }
+            echo "</tr>";
+        }
+    }
+    ?>
 </body>
 
 </html>
