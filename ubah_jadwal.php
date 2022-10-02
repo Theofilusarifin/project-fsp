@@ -7,24 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/custom.css">
     <title>Ubah Jadwal</title>
-
-    <!-- <style>
-        table,
-        td,
-        th {
-            border: 1px solid black;
-            text-align: left;
-            /* width: 35rem; */
-            height: 2rem;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-    </style> -->
-
 </head>
 
 <body>

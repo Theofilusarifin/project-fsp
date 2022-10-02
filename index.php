@@ -23,7 +23,7 @@
             $mahasiswa = new Mahasiswa("localhost", "root", "", "project_uts");
 
             // Define prequisities data
-            $selected_nrp = 0;
+            $selected_nrp = "";
             $is_disabled = "disabled";
             // Check if there any nrp that already selected
             if (isset($_GET['selector_nrp'])) {

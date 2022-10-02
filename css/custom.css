@@ -5,6 +5,7 @@ body {
     line-height: 1.42em;
     color: #000000;
     background-color: #DBDFFD;
+    padding-top: 1%;
 }
 
 table {
@@ -80,20 +81,6 @@ th {
     box-shadow: 0 6px 6px -6px #0E1119;
 }
 
-/* .container td:hover {
-background-color: #FFF842;
-color: #403E10;
-font-weight: bold;
-
-box-shadow: #7F7C21 -1px 1px, #7F7C21 -2px 2px, #7F7C21 -3px 3px, #7F7C21 -4px 4px, #7F7C21 -5px 5px, #7F7C21 -6px 6px;
-transform: translate3d(6px, -6px, 0);
-
-transition-delay: 0s;
-    transition-duration: 0.4s;
-    transition-property: all;
-transition-timing-function: line;
-} */
-
 @media (max-width: 800px) {
 
     .container th{
@@ -115,6 +102,10 @@ transition-timing-function: line;
     font-size: 16px;
     margin-left: 10%;
     cursor: pointer;
+}
+
+#btn_ubah:disabled{
+    cursor: not-allowed;
 }
 
 #btn_pilih{
@@ -146,4 +137,39 @@ label{
     padding-left: 10%;
 }
 
+@media (max-width: 800px) {
+    label{
+        font-weight: bold;
+        font-size: 20px;
+        color: #083AA9;
+    }
+}
+
 /* Select Styling */
+select {
+    width: 100%;
+    min-width: 15ch;
+    max-width: 30ch;
+    border: 1px solid var(--select-border);
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #fff;
+}
+
+@media (max-width: 800px) {
+    select {
+        width: 100%;
+        min-width: 15ch;
+        max-width: 30ch;
+        border: 1px solid var(--select-border);
+        border-radius: 0.25em;
+        padding: 0.25em 0.5em;
+        font-size: 14px;
+        cursor: pointer;
+        line-height: 1.1;
+        background-color: #fff;
+    }
+}
