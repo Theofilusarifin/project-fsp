@@ -27,10 +27,19 @@
 </head>
 
 <body>
-    <?php
+    <form action="proses_update_jadwal.php" method="post">
+        <?php
+        //  Define all the require
         require("class/mahasiswa.php");
-        //ciptain object mahasiswa, panggil class Mahasiswa
+        require("class/hari.php");
+        require("class/jam_kuliah.php");
+        require("class/jadwal.php");
+
+        //Create objects from class
         $mahasiswa = new Mahasiswa("localhost", "root", "", "project_uts");
+        $hari = new Hari("localhost", "root", "", "project_uts");
+        $jam_kuliah = new Jam_Kuliah("localhost", "root", "", "project_uts");
+        $jadwal = new Jadwal("localhost", "root", "", "project_uts");
 
         $nama_mhs = '';
         //panggil method SearchMahasiswa
@@ -43,49 +52,59 @@
         echo $_GET['nrp'] . " - " . $nama_mhs;
         echo "<br><br>";
 
-        require("class/hari.php");
-        //ciptain object hari, panggil class hari
-        $hari = new Hari("localhost", "root", "", "project_uts");
+        // Get current student jadwal
+        $jadwal_kuliah_mahasiwa = [];
+        $result_jadwal = $jadwal->SearchJadwal($_GET['nrp']);
+        // Pass all current student jadwal to the array
+        while ($row = $result_jadwal->fetch_assoc()) {
+            $jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$row['idhari']] = 1;
+        }
+
+        // Create a new array for jadwal
+        $jadwal_keseluruhan = [];
+        $range_jam_kuliah = [];
+        // Fill jadwal keseluruhan
+        $result_jam_kuliah = $jam_kuliah->ShowJamKuliah();
+        while ($row = $result_jam_kuliah->fetch_assoc()) {
+            $result_hari = $hari->ShowHari();
+            $range_jam_kuliah[] = date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai']));
+            while ($col = $result_hari->fetch_assoc()) {
+                $jadwal_keseluruhan[$row['idjam_kuliah']][$col['idhari']] = isset($jadwal_kuliah_mahasiwa[$row['idjam_kuliah']][$col['idhari']]) ? 1 : 0;
+            }
+        }
 
         echo "<table>";
 
-        //panggil method ShowHari
-        $result1 = $hari->ShowHari();
+        $show_hari = $hari->ShowHari();
         echo "<tr>";
-        echo "<td>";
-        echo "</td>";
-
+        echo "<td></td>";
         //nampilin harinya dalam satu baris
-        while ($row = $result1->fetch_assoc()) {
-            echo "<td>";
-            echo $row['nama'];
-            echo "</td>";
+        while ($row = $show_hari->fetch_assoc()) {
+            echo "<td>" . $row['nama'] . "</td>";
         }
         echo "</tr>";
 
-        require("class/jam_kuliah.php");
-        //ciptain object jam_kuliah, panggil class Jam_Kuliah
-        $jam_kuliah = new Jam_Kuliah("localhost", "root", "", "project_uts");
-        //panggil method ShowJamKuliah
-        $result2 = $jam_kuliah->ShowJamKuliah();
-
-        //nampilin jam kuliahnya, kalo kurang rapi mohon maap, bisa dibantu rapihin yak
-        while ($row = $result2->fetch_assoc()) {
-            echo "<tr";
-            echo "<td>";
-            echo "</td>";
-            echo "<td>";
-            echo date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai']));
-            echo "</td>";
-            for ($i = 0; $i < mysqli_num_rows($result1); $i++) {
+        $i = 0;
+        foreach ($jadwal_keseluruhan as $idjam_kuliah => $jam_kuliah) {
+            echo "<tr>";
+            echo "<td>" . $range_jam_kuliah[$i] . "</td>";
+            $i += 1;
+            foreach ($jam_kuliah as $idhari => $hari) {
                 echo "<td>";
-                echo "<input type='checkbox' name='' id='' value='" . $row['jam_mulai'] . "-" . $row['jam_selesai'] . "'>";
+                $checked = isset($jadwal_kuliah_mahasiwa[$idjam_kuliah][$idhari]) ? "checked" : "";
+                $value = $idjam_kuliah . "_" . $idhari;
+                echo "<input type='checkbox' name='checkbox_jadwal[]' value='$value' $checked>";
                 echo "</td>";
             }
             echo "</tr>";
         }
-        echo "</table>"
-    ?>
+        echo "</table>";
+        ?>
+        <br>
+        <input type="hidden" name="nrp" value="<?= $_GET['nrp'] ?>">
+        <input type="submit" name="submit" value="Ubah Jadwal">
+    </form>
+
 </body>
 
 </html>
