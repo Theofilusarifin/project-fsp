@@ -74,7 +74,7 @@
         ?>
     </table>
     <br>
-    
+
     <!-- FORM UBAH JADWAL -->
     <form action="ubah_jadwal.php" method="get" id="form-ubah">
         <input type="hidden" name="nrp" value="">
@@ -85,7 +85,7 @@
     <script>
         $("#btn_ubah").on("click", function() {
             // Pass selected NRP on FORM SELECT MAHASISWA into input hidden in FORM UBAH JADWAL
-            $("input[name='nrp']").attr("value", $('select[name=selector_nama] option').filter(':selected').val());
+            $("input[name='nrp']").attr("value", $('select[name=selector_nrp] option').filter(':selected').val());
             // Submit FORM UBAH JADWAL
             $("form-ubah").submit();
         });
