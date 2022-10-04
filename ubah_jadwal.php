@@ -81,12 +81,15 @@
             $i += 1;
             // Define hari prequisities
             foreach ($jam_kuliah as $idhari => $hari) {
-                echo "<td>";
+                echo "<td style='margin:0 auto; text-align:center'>";
                 // Check wheter there is jadwal or not? if any, give checked
                 $checked = isset($jadwal_kuliah_mahasiwa[$idjam_kuliah][$idhari]) ? "checked" : "";
                 // Set checkbox value into idjamkuliah_idhari, we will explode it on the process
                 $value = $idjam_kuliah . "_" . $idhari;
+                echo "<label class='box'>";
                 echo "<input type='checkbox' name='checkbox_jadwal[]' value='$value' $checked>";
+                echo "<span class='checkmark'></span>";
+                echo "</label>";
                 echo "</td>";
             }
             echo "</tr>";
