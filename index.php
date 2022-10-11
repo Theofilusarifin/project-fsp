@@ -110,12 +110,12 @@
         while ($row = $data_jam_kuliah->fetch_assoc()) {
             echo "<tr>";
             // Display the range jam kuliah on the first col
-            echo "<td>" . date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai'])) . "</td>";
+            echo "<td style='width:12.5%;'>" . date('H:i', strtotime($row['jam_mulai'])) . " - " . date('H:i', strtotime($row['jam_selesai'])) . "</td>";
             $data_hari = $hari->ShowHari();
             while ($col = $data_hari->fetch_assoc()) {
                 // If the jadwal is match then give a tick symbol ✔
                 $is_ticked = (isset($jadwal_kuliah_mahasiswa[$row['idjam_kuliah']][$col['idhari']])) ? '✔' : '';
-                echo "<td>$is_ticked</td>";
+                echo "<td style='color:white; padding:0; width:12.5%; font-size: 25px;' >$is_ticked</td>";
             }
             echo "</tr>";
         }

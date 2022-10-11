@@ -12,9 +12,9 @@
 <body>
     <?php
     //Return to index.php if user direct manually to ubah_jadwal.php without submit nrp from the index.php
-        if(!isset($_GET['nrp'])){
-            header('Location: index.php');
-        }
+    if (!isset($_GET['nrp'])) {
+        header('Location: index.php');
+    }
     ?>
     <form action="proses_update_jadwal.php" method="post">
         <?php
@@ -77,17 +77,17 @@
         // Define jam_kuliah prequisities
         foreach ($jadwal_keseluruhan as $idjam_kuliah => $jam_kuliah) {
             echo "<tr>";
-            echo "<td>" . $range_jam_kuliah[$i] . "</td>";
+            echo "<td style='width:12.5%;'>" . $range_jam_kuliah[$i] . "</td>";
             $i += 1;
             // Define hari prequisities
             foreach ($jam_kuliah as $idhari => $hari) {
-                echo "<td style='margin:0 auto; text-align:center'>";
+                echo "<td style='width:12.5%; padding:0px; text-align:center'>";
                 // Check wheter there is jadwal or not? if any, give checked
                 $checked = isset($jadwal_kuliah_mahasiwa[$idjam_kuliah][$idhari]) ? "checked" : "";
                 // Set checkbox value into idjamkuliah_idhari, we will explode it on the process
                 $value = $idjam_kuliah . "_" . $idhari;
                 echo "<label class='box'>";
-                echo "<input type='checkbox' name='checkbox_jadwal[]' value='$value' $checked>";
+                echo "<input type='checkbox' style='text-align:center;' name='checkbox_jadwal[]' value='$value' $checked>";
                 echo "<span class='checkmark'></span>";
                 echo "</label>";
                 echo "</td>";
