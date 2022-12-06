@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 </head>
@@ -13,19 +14,27 @@
 <body>
     <div id="container">
         <header>
-            <h1>Login</h1>
+            <h1>LOG IN</h1>
         </header>
 
         <main>
             <form method='post' action='api/login_process.php' id="frmLogin">
-                <label>Username :</label>
-                <input type="text" name="username" id="username" placeholder="Enter username here">
-                <label>Password :</label>
-                <input type="password" name="password" id="password" placeholder="Enter password here">
+                <div class="input">
+                    <!-- <label>Username :</label> -->
+                    <input type="text" name="username" id="username" required="required">
+                    <span>Username</span>
+                </div>
+                <div class="input">
+                    <!-- <label>Password :</label> -->
+                    <input type="password" name="password" id="password" required="required">
+                    <span>Password</span>
+                </div>
+                <div class="input">
+                    <button type="submit" name="login" id="login">LOGIN</button>
+                </div>
+                <br>
                 <p id='error-message'>
                 </p>
-                <br>
-                <button type="submit" name="login" id="login">LOGIN</button>
             </form>
         </main>
     </div>
