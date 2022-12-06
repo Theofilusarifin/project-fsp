@@ -12,7 +12,7 @@ html, body {
 .input {
     position: relative;
     display: inline-block;
-    margin: 10px;
+    margin: 25px 10px;
 }
 
 .input input {
