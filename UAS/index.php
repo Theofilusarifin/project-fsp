@@ -12,11 +12,14 @@
 </head>
 
 <body>
-    <div class="grid-container"></div>
-    <div class="paging">
-        <i class="fa fa-arrow-left"></i>
-        <span class="pageContent"></span>
-        <i class="fa fa-arrow-right"></i>
+    <a class="logout">Log Out</a>
+    <div class="container">
+        <div class="grid-container"></div><br>
+        <div class="paging">
+            <i class="fa fa-arrow-left"></i>
+            <span class="pageContent"></span>
+            <i class="fa fa-arrow-right"></i>
+        </div>
     </div>
 
     <script>
@@ -30,7 +33,7 @@
                     var jData = JSON.parse(data);
 
                     if (!localStorage.idLiked) {
-                        if(typeof jData.idLiked != 'undefined'){
+                        if (typeof jData.idLiked != 'undefined') {
                             const arrayLike = JSON.stringify(jData.idLiked);
                             localStorage.idLiked = arrayLike;
                         }
@@ -60,7 +63,8 @@
                     var jData = JSON.parse(data);
                     if (jData.status == 'success') {
                         $('#like' + id).attr("style", "color: red;");
-
+                        $('#total_like'+id).html((parseInt($('#total_like'+id).html()) + 1));
+                        $('#btnLike'+id).prop('disabled', true);
                         if (!localStorage.idLiked) {
                             var idLike = [id];
                         } else {
@@ -100,8 +104,10 @@
             $.each(arrLike, function (i, val) {
                 if (val['liked'] == 'yes') {
                     var color = "red";
+                    var disabledStatus = 'disabled';
                 } else {
                     var color = "white";
+                    var disabledStatus = '';
                 }
                 $(".grid-container").append(
                     "<div id='item" + val['id'] + "'>" +
@@ -109,39 +115,16 @@
                     "<img src='" + val['img_url'] + "' class='image'>" +
                     "</div>" +
                     "<div>" +
-                    "<button onClick='like(" + val['id'] + ")'><i class='fa fa-heart' id='like" + val['id'] + "' style='color: " + color + "'></i></button>" +
-                    "<button><i class='fa fa-comment'></i></button>" +
+                    "<button onClick='like(" + val['id'] + ")' " + disabledStatus + " class='btnLike' id='btnLike" + val['id'] + 
+                        "'><i class='fa fa-heart' id='like" + val['id'] + "' style='color: " + 
+                        color + "'></i> <span id='total_like" + val['id'] + "'>" + val['total_like'] + "</span> likes</button>" +
+                    "<button class='btnComment'><i class='fa fa-comment'></i></button>" +
                     "</div>" +
                     "</div>");
             });
         }
-
-        $(".page").click(function (event) {
-            // event.preventDefault();
-
-            // var dataP = $(this).html();
-            // $.post("api/paging.php",
-            //     {
-            //         command: 'showContent',
-            //         page: dataP
-            //     })
-            //     .done(function (data) {
-            //         var jData = JSON.parse(data);
-            //         $(".grid-container").html();
-            //         $.each(jData.msg, function (i, val) {
-            //             $(".grid-container").append(
-            //                 "<div id='item" + i + "'>" +
-            //                 "<div>" +
-            //                 "<img src='" + val['img_url'] + "' class='image'>" +
-            //                 "</div>" +
-            //                 "<div>" +
-            //                 "<i class='fa fa-heart'>" +
-            //                 "<i class='fa fa-comment'>" +
-            //                 "</div>" +
-            //                 "</div>"
-            //             );
-            //         });
-            //     });
+        $(".logout").click(function () {
+            window.location.href = 'login.php';
         });
     </script>
 </body>

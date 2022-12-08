@@ -15,7 +15,15 @@ if(isset($_POST['username']) && isset($_POST['idMeme'])){
     $stmt->execute();
 
     if($stmt->affected_rows > 0){
-        $arr = ["status" => "success", "msg" => "insert success"];
+        $sql = "UPDATE memes SET total_like = total_like + 1 WHERE id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        if($stmt->affected_rows > 0){
+            $arr = ["status" => "success", "msg" => "insert success"];
+        } else {
+            $arr = ["status" => "failed", "msg" => "update like failed"];
+        }
     } else {
         $arr = ["status" => "failed", "msg" => "insert failed"];
     }
