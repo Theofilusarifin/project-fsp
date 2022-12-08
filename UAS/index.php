@@ -62,7 +62,8 @@
 
         function like(id){
             $.post("api/like_process.php", {
-                idMeme: id
+                idMeme: id,
+                username: localStorage.username
             })
             .done(function(data){
                 var jData = JSON.parse(data);

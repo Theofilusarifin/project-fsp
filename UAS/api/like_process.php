@@ -1,14 +1,14 @@
 <?php
-session_start();
 $mysqli = new mysqli("localhost", "root", "", "uas_fsp");
 
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: " . $mysqli->connect_error;
 }
 
-if(isset($_SESSION['username']) && isset($_POST['idMeme'])){
-    $username = $_SESSION['username'];
+if(isset($_POST['username']) && isset($_POST['idMeme'])){
+    $username = $_POST['username'];
     $id = $_POST['idMeme'];
+    
     $sql = "INSERT INTO likes (user_username, meme_id) VALUES (?,?)";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("ii", $username, $id);

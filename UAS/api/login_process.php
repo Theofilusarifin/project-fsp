@@ -1,5 +1,4 @@
 <?php
-session_start();
 $mysqli = new mysqli("localhost", "root", "", "uas_fsp");
 
 if ($mysqli->connect_errno) {
