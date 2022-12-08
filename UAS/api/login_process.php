@@ -10,7 +10,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     $status = '';
     $msg = '';
 
-    $username = $_POST['username'];
+    $_SESSION['username'] = $username = $_POST['username'];
     $password = $_POST['password'];
 
     $sql = "SELECT * FROM users WHERE username = ? AND password = ?";

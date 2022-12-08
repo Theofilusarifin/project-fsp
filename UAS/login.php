@@ -56,7 +56,8 @@
                 success: (response) => {
                     response = JSON.parse(response)
                     if (response.status == 'success') {
-                        window.location.href = 'index.php'
+                        localStorage.username = $("#username").val();
+                        window.location.href = 'index.php';
                     } else {
                         $('#error-message').html(response.msg)
                         $('#error-message').hide();

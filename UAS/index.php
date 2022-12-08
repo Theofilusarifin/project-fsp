@@ -23,7 +23,8 @@
         $(document).ready(function () {
             $.post("api/onload.php",
                 {
-                    memes: "memes"
+                    memes: "memes",
+                    username: localStorage.username
                 })
                 .done(function (data) {
                     var jData = JSON.parse(data);
@@ -31,20 +32,24 @@
                         $.post("api/paging.php", { command: "jumpage" })
                             .done(function (data2) {
                                 var jData2 = JSON.parse(data2);
-                                // console.log(jData2.msg);
                                 for (i = 1; i <= jData2.msg; i++) {
                                     $(".pageContent").append("<a href='#' class='page'>" + i + "</a>");
                                 }
                             });
                         $.each(jData.msg, function (i, val) {
+                            if(val['liked'] == 'yes'){
+                                var color = "red";
+                            } else {
+                                var color = "white";
+                            }
                             $(".grid-container").append(
-                                "<div id='item" + i + "'>" +
+                                "<div id='item" + val['id'] + "'>" +
                                 "<div>" +
                                 "<img src='" + val['img_url'] + "' class='image'>" +
                                 "</div>" +
                                 "<div>" +
-                                "<i class='fa fa-heart'>" +
-                                "<i class='fa fa-comment'>" +
+                                "<button onClick='like(" + val['id'] + ")'><i class='fa fa-heart' id='like" + val['id'] + "' style='color: " + color +"'></i></button>" +
+                                "<button><i class='fa fa-comment'></i></button>" +
                                 "</div>" +
                                 "</div>");
                         });
@@ -55,7 +60,22 @@
                 });
         });
 
-        $(".page").click(function(event) {
+        function like(id){
+            $.post("api/like_process.php", {
+                idMeme: id
+            })
+            .done(function(data){
+                var jData = JSON.parse(data);
+                if(jData.status == 'success'){
+                    $('#like' + id).attr("style", "color: red;");
+                    // alert('success to like');
+                } else{
+                    alert('failed to like');
+                }
+            });
+        }
+
+        $(".page").click(function (event) {
             event.preventDefault();
 
             var dataP = $(this).html();
@@ -67,19 +87,19 @@
                 .done(function (data) {
                     var jData = JSON.parse(data);
                     $(".grid-container").html();
-                    // $.each(jData.msg, function (i, val) {
-                    //     $(".grid-container").append(
-                    //         "<div id='item" + i + "'>" +
-                    //         "<div>" +
-                    //         "<img src='" + val['img_url'] + "' class='image'>" +
-                    //         "</div>" +
-                    //         "<div>" +
-                    //         "<i class='fa fa-heart'>" +
-                    //         "<i class='fa fa-comment'>" +
-                    //         "</div>" +
-                    //         "</div>"
-                    //     );
-                    // });
+                    $.each(jData.msg, function (i, val) {
+                        $(".grid-container").append(
+                            "<div id='item" + i + "'>" +
+                            "<div>" +
+                            "<img src='" + val['img_url'] + "' class='image'>" +
+                            "</div>" +
+                            "<div>" +
+                            "<i class='fa fa-heart'>" +
+                            "<i class='fa fa-comment'>" +
+                            "</div>" +
+                            "</div>"
+                        );
+                    });
                 });
         });
     </script>
