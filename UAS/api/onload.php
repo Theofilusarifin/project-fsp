@@ -29,7 +29,7 @@ if (isset($_POST['memes']) && isset($_POST['username'])) {
         if ($res->num_rows > 0) {
             $data = [];
             while ($row = $res->fetch_assoc()) {
-                if(in_array($row['id'], $idLiked)){
+                if (in_array($row['id'], $idLiked)) {
                     $row['liked'] = 'yes';
                 } else {
                     $row['liked'] = 'no';
@@ -38,6 +38,26 @@ if (isset($_POST['memes']) && isset($_POST['username'])) {
             }
             $status = "success";
             $arr = ["status" => $status, "msg" => $data, "idLiked" => $idLiked];
+        } else {
+            $status = "failed";
+            $arr = ["status" => $status, "msg" => "error"];
+        }
+        echo json_encode($arr);
+    } else {
+        // Select 12 first memes to be shown on index.php
+        $sql = "SELECT * FROM memes LIMIT 0, 12";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if ($res->num_rows > 0) {
+            $data = [];
+            while ($row = $res->fetch_assoc()) {
+                $row['liked'] = 'no';
+                array_push($data, $row);
+            }
+            $status = "success";
+            $arr = ["status" => $status, "msg" => $data];
         } else {
             $status = "failed";
             $arr = ["status" => $status, "msg" => "error"];

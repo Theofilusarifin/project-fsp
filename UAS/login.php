@@ -68,7 +68,14 @@
                     }
                 }
             });
-
+        });
+        $(document).ready(function () {
+            if(localStorage.username){
+                localStorage.removeItem('username');
+            }
+            if(localStorage.idLiked){
+                localStorage.removeItem('idLiked');
+            }
         });
     </script>
 </body>

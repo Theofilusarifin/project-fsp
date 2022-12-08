@@ -26,30 +26,53 @@ if (isset($_POST['command'])) {
             $arr = ["status" => $status, "msg" => $sql];
         }
     } else if ($command == 'showContent' && isset($_POST['page']) && isset($_POST['idLiked'])) {
-        $start = ((int) $_POST['page'] - 1) * 12;
-        $idLiked = $_POST['idLiked'];
+        if ($_POST['idLiked'] != '1') {
+            $start = ((int) $_POST['page'] - 1) * 12;
+            $idLiked = $_POST['idLiked'];
 
-        $sql = "SELECT * FROM memes LIMIT $start, 12";
-        $stmt = $mysqli->prepare($sql);
-        $stmt->execute();
-        $res = $stmt->get_result();
+            $sql = "SELECT * FROM memes LIMIT $start, 12";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->execute();
+            $res = $stmt->get_result();
 
-        if ($res->num_rows > 0) {
-            // $row = $res->fetch_all();
-            $data = [];
-            while ($row = $res->fetch_assoc()) {
-                if(in_array($row['id'], $idLiked)){
-                    $row['liked'] = 'yes';
-                } else {
-                    $row['liked'] = 'no';
+            if ($res->num_rows > 0) {
+                // $row = $res->fetch_all();
+                $data = [];
+                while ($row = $res->fetch_assoc()) {
+                    if (in_array($row['id'], $idLiked)) {
+                        $row['liked'] = 'yes';
+                    } else {
+                        $row['liked'] = 'no';
+                    }
+                    array_push($data, $row);
                 }
-                array_push($data, $row);
+                $status = "success";
+                $arr = ["status" => $status, "msg" => $data];
+            } else {
+                $status = "failed";
+                $arr = ["status" => $status, "msg" => $sql];
             }
-            $status = "success";
-            $arr = ["status" => $status, "msg" => $data];
         } else {
-            $status = "failed";
-            $arr = ["status" => $status, "msg" => $sql];
+            $start = ((int) $_POST['page'] - 1) * 12;
+
+            $sql = "SELECT * FROM memes LIMIT $start, 12";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows > 0) {
+                // $row = $res->fetch_all();
+                $data = [];
+                while ($row = $res->fetch_assoc()) {
+                    $row['liked'] = 'no';
+                    array_push($data, $row);
+                }
+                $status = "success";
+                $arr = ["status" => $status, "msg" => $data];
+            } else {
+                $status = "failed";
+                $arr = ["status" => $status, "msg" => $sql];
+            }
         }
     }
 } else {

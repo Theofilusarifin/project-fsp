@@ -28,8 +28,13 @@
                 })
                 .done(function (data) {
                     var jData = JSON.parse(data);
-                    const arrayLike = JSON.stringify(jData.idLiked);
-                    localStorage.idLiked = arrayLike;
+
+                    if (!localStorage.idLiked) {
+                        if(typeof jData.idLiked != 'undefined'){
+                            const arrayLike = JSON.stringify(jData.idLiked);
+                            localStorage.idLiked = arrayLike;
+                        }
+                    }
                     if (jData.status == 'success') {
                         $.post("api/paging.php", { command: "jumpage" })
                             .done(function (data2) {
@@ -56,8 +61,12 @@
                     if (jData.status == 'success') {
                         $('#like' + id).attr("style", "color: red;");
 
-                        var idLike = JSON.parse(localStorage.idLiked);
-                        idLike.push(id);
+                        if (!localStorage.idLiked) {
+                            var idLike = [id];
+                        } else {
+                            var idLike = JSON.parse(localStorage.idLiked);
+                            idLike.push(id);
+                        }
                         localStorage.idLiked = JSON.stringify(idLike);
 
                         // alert('success to like');
@@ -68,7 +77,12 @@
         }
 
         function page(dataP) {
-            var idLike = JSON.parse(localStorage.idLiked);
+            var idLike;
+            if (localStorage.idLiked) {
+                idLike = JSON.parse(localStorage.idLiked);
+            } else {
+                idLike = '1';
+            }
             $.post("api/paging.php",
                 {
                     command: 'showContent',
@@ -78,19 +92,6 @@
                 .done(function (data) {
                     var jData = JSON.parse(data);
                     $(".grid-container").html("");
-                    // $.each(jData.msg, function (i, val) {
-                    //     $(".grid-container").append(
-                    //         "<div id='item" + i + "'>" +
-                    //         "<div>" +
-                    //         "<img src='" + val['img_url'] + "' class='image'>" +
-                    //         "</div>" +
-                    //         "<div>" +
-                    //         "<i class='fa fa-heart'>" +
-                    //         "<i class='fa fa-comment'>" +
-                    //         "</div>" +
-                    //         "</div>"
-                    //     );
-                    // });
                     setLikes(jData.msg);
                 });
         }
