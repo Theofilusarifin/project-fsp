@@ -37,7 +37,7 @@ if (isset($_POST['memes']) && isset($_POST['username'])) {
                 array_push($data, $row);
             }
             $status = "success";
-            $arr = ["status" => $status, "msg" => $data];
+            $arr = ["status" => $status, "msg" => $data, "idLiked" => $idLiked];
         } else {
             $status = "failed";
             $arr = ["status" => $status, "msg" => "error"];

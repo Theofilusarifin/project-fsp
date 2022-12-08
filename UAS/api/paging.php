@@ -25,8 +25,10 @@ if (isset($_POST['command'])) {
             $status = "failed";
             $arr = ["status" => $status, "msg" => $sql];
         }
-    } else if ($command == 'showContent' && isset($_POST['page'])) {
+    } else if ($command == 'showContent' && isset($_POST['page']) && isset($_POST['idLiked'])) {
         $start = ((int) $_POST['page'] - 1) * 12;
+        $idLiked = $_POST['idLiked'];
+
         $sql = "SELECT * FROM memes LIMIT $start, 12";
         $stmt = $mysqli->prepare($sql);
         $stmt->execute();
@@ -36,6 +38,11 @@ if (isset($_POST['command'])) {
             // $row = $res->fetch_all();
             $data = [];
             while ($row = $res->fetch_assoc()) {
+                if(in_array($row['id'], $idLiked)){
+                    $row['liked'] = 'yes';
+                } else {
+                    $row['liked'] = 'no';
+                }
                 array_push($data, $row);
             }
             $status = "success";
