@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,127 +13,151 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PROJECT FSP</title>
+    <!-- CSS -->
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
-    <a class="logout">Log Out</a>
+    <button name="logout" id="logout" onclick="logout()">LOGOUT</button>
+    <br>
     <div class="container">
-        <div class="grid-container"></div><br>
-        <div class="paging">
+        <div class="grid-container" id="card-container">
+            <!-- Get data from ajax -->
+        </div>
+        <!-- <div class="paging">
             <i class="fa fa-arrow-left"></i>
             <span class="pageContent"></span>
             <i class="fa fa-arrow-right"></i>
-        </div>
+        </div> -->
     </div>
 
     <script>
-        $(document).ready(function () {
-            $.post("api/onload.php",
-                {
-                    memes: "memes",
-                    username: localStorage.username
-                })
-                .done(function (data) {
-                    var jData = JSON.parse(data);
+        $(document).ready(() => {
+            $.ajax({
+                // URL Absolute Path
+                // url: 'https://trivialteam.000webhostapp.com/api/get_memes.php',
+                url: 'api/get_memes.php',
 
-                    if (!localStorage.idLiked) {
-                        if (typeof jData.idLiked != 'undefined') {
-                            const arrayLike = JSON.stringify(jData.idLiked);
-                            localStorage.idLiked = arrayLike;
-                        }
+                type: 'POST',
+                data: {
+                    data_page: 12,
+                    page: <?php echo $_GET['page'] ?>,
+                },
+
+                success: (response) => {
+                    var response = JSON.parse(response)
+
+                    // Success retrieve data
+                    if (response.status == 'success') {
+                        var temp = ''
+                        // DO iteration on each item
+                        $.each(response.msg, (i, item) => {
+                            // Add each item into temp var
+                            var pressed = (item.liked) ? ' press' : ''
+                            temp += `<div class="card" id=${item.id}>
+                                        <div class="img-container">
+                                            <img src=${item.img_url} />
+                                        </div>
+                                        <div class="content">
+                                            <div class="like-container">
+                                                <i class="like${pressed}" onclick="like(${item.id})" id=like_${item.id}></i>
+                                                <p id=text_like_${item.id}>${item.total_like} Likes</p>
+                                            </div>
+                                            <i class="fa-solid fa-comment comment"></i>
+                                        </div>
+                                    </div>`
+                        });
+                        // Replace card container html to be new item
+                        $('#card-container').html(temp)
                     }
-                    if (jData.status == 'success') {
-                        $.post("api/paging.php", { command: "jumpage" })
-                            .done(function (data2) {
-                                var jData2 = JSON.parse(data2);
-                                for (i = 1; i <= jData2.msg; i++) {
-                                    $(".pageContent").append("<button onClick='page(" + i + ")'>" + i + "</button>");
-                                }
-                            });
-                        setLikes(jData.msg);
-                        // $('.item5').html(jData.msg[0].img_url);
-                    } else {
-                        console.log('gagal load');
+                    // Show error message 
+                    else {
+                        alert(response.msg)
                     }
-                });
-        });
-
-        function like(id) {
-            $.post("api/like_process.php", {
-                idMeme: id,
-                username: localStorage.username
-            })
-                .done(function (data) {
-                    var jData = JSON.parse(data);
-                    if (jData.status == 'success') {
-                        $('#like' + id).attr("style", "color: red;");
-                        $('#total_like'+id).html((parseInt($('#total_like'+id).html()) + 1));
-                        $('#btnLike'+id).prop('disabled', true);
-                        if (!localStorage.idLiked) {
-                            var idLike = [id];
-                        } else {
-                            var idLike = JSON.parse(localStorage.idLiked);
-                            idLike.push(id);
-                        }
-                        localStorage.idLiked = JSON.stringify(idLike);
-
-                        // alert('success to like');
-                    } else {
-                        alert('failed to like');
-                    }
-                });
-        }
-
-        function page(dataP) {
-            var idLike;
-            if (localStorage.idLiked) {
-                idLike = JSON.parse(localStorage.idLiked);
-            } else {
-                idLike = '1';
-            }
-            $.post("api/paging.php",
-                {
-                    command: 'showContent',
-                    page: dataP,
-                    idLiked: idLike
-                })
-                .done(function (data) {
-                    var jData = JSON.parse(data);
-                    $(".grid-container").html("");
-                    setLikes(jData.msg);
-                });
-        }
-
-        function setLikes(arrLike) {
-            $.each(arrLike, function (i, val) {
-                if (val['liked'] == 'yes') {
-                    var color = "red";
-                    var disabledStatus = 'disabled';
-                } else {
-                    var color = "white";
-                    var disabledStatus = '';
                 }
-                $(".grid-container").append(
-                    "<div id='item" + val['id'] + "'>" +
-                    "<div>" +
-                    "<img src='" + val['img_url'] + "' class='image'>" +
-                    "</div>" +
-                    "<div>" +
-                    "<button onClick='like(" + val['id'] + ")' " + disabledStatus + " class='btnLike' id='btnLike" + val['id'] + 
-                        "'><i class='fa fa-heart' id='like" + val['id'] + "' style='color: " + 
-                        color + "'></i> <span id='total_like" + val['id'] + "'>" + val['total_like'] + "</span> likes</button>" +
-                    "<button class='btnComment'><i class='fa fa-comment'></i></button>" +
-                    "</div>" +
-                    "</div>");
             });
-        }
-        $(".logout").click(function () {
-            window.location.href = 'login.php';
         });
+
+        // Like Function
+        const like = (meme_id) => {
+            if ($("#like_" + meme_id).attr('class') == 'like') {
+                // Add like to database using ajax
+                $.ajax({
+                    // URL Absolute Path
+                    // url: 'https://trivialteam.000webhostapp.com/api/like_process.php',
+                    url: 'api/like_process.php',
+
+                    type: 'POST',
+                    data: {
+                        meme_id: meme_id,
+                    },
+                    success: (response) => {
+
+                        var response = JSON.parse(response)
+                        // Success retrieve data
+                        if (response.status == 'success') {
+                            console.log(response.msg)
+                            // Change like count
+                            $("#text_like_" + meme_id).html(response.msg + " likes");
+                        }
+                        // Show error message 
+                        else {
+                            alert(response.msg)
+                        }
+                    }
+                }).done(() => {
+                    // Add animation after ajax is done
+                    $("#like_" + meme_id).toggleClass("press", 1000)
+                });
+            } else {
+                alert("You already liked this memes")
+            }
+        }
+
+        // Logout Function
+        const logout = () => {
+            $.ajax({
+                // URL Absolute Path
+                url: 'api/logout_process.php',
+                // url: 'https://trivialteam.000webhostapp.com/api/logout_process.php',
+
+                data: {},
+                success: (response) => {
+                    response = JSON.parse(response)
+                    // If logout success redirect to login
+                    if (response.status == 'success') {
+                        window.location.href = 'login.php';
+                    }
+                    // Show error message 
+                    else {
+                        alert(response.msg)
+                    }
+                }
+            });
+        };
+
+        // function page(dataP) {
+        //     var idLike;
+        //     if (localStorage.idLiked) {
+        //         idLike = JSON.parse(localStorage.idLiked);
+        //     } else {
+        //         idLike = '1';
+        //     }
+        //     $.post("api/paging.php", {
+        //             command: 'showContent',
+        //             page: dataP,
+        //             idLiked: idLike
+        //         })
+        //         .done(function(data) {
+        //             var jData = JSON.parse(data);
+        //             $(".grid-container").html("");
+        //             setLikes(jData.msg);
+        //         });
+        // }
     </script>
 </body>
 

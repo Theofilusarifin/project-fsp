@@ -1,71 +1,171 @@
-.grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    gap: 10px;
-    background-color: #2196F3;
-    padding: 10px;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+	font-family: "Poppins", sans-serif;
 }
 
-.grid-container>div {
-    background-color: rgba(255, 255, 255, 0.8);
-    font-size: 30px;
-    border-radius: 20px;
-}
-
-img {
-    height: 200px;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+html,
+body {
+	margin: 0;
+	background-color: #fff8bc;
+	position: relative;
 }
 
 .container {
-    margin: 2% 10% 2% 10%;
+	padding: 3% 10%;
 }
 
-.paging {
-    text-align: left;
+#logout {
+	font-size: 1em;
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #f65a83;
+	color: white;
+	cursor: pointer;
+	border: 2px solid #f65a83;
+	position: absolute;
+	right: 10%;
+	top: 5%;
 }
 
-.logout {
-    float: right;
-    padding-right: 2%;
+.grid-container {
+	display: grid;
+	grid-template-columns: auto auto auto auto;
+	grid-gap: 40px;
+	padding: 60px 0;
 }
 
-.btnLike{
-    float: left;
-    margin: 0px 0px 3% 2%;
-    border: none;
-    background-color: transparent;
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	background-color: #fefefe;
+	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	cursor: pointer;
+	transition: all 0.3s ease 0s;
 }
 
-.btnComment{
-    float: right;
-    margin: 0 2% 3% 0;
-    border: none;
-    background-color: transparent;
+.card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.img-container {
+	width: 100%;
+	padding-top: 56.25%;
+	overflow: hidden;
+	position: relative;
+	border-radius: 20px 20px 0px 0px;
+}
+
+.img-container img {
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0px 10px;
+}
+
+.like-container {
+	display: flex;
+	align-items: center;
+}
+
+.like {
+	cursor: pointer;
+	padding: 0px 12px;
+	color: #aaa;
+	transition: 0.2s;
+}
+
+.like:hover {
+	color: #666;
+}
+
+.like:before {
+	font-family: fontawesome;
+	content: "\f004";
+	font-style: normal;
+}
+
+.like.press {
+	animation: size 0.4s;
+	color: #e23b3b;
+}
+
+.comment {
+	cursor: pointer;
+	padding: 0px 12px;
+	color: #1da1f2;
+	transition: 0.2s;
+}
+
+.comment:before {
+	font-family: fontawesome;
+	content: "\f004";
+	font-style: normal;
+}
+
+@keyframes fade {
+	0% {
+		color: transparent;
+	}
+	50% {
+		color: #e23b3b;
+	}
+	100% {
+		color: transparent;
+	}
+}
+
+@keyframes size {
+	0% {
+		padding: 0px 12px;
+	}
+	50% {
+		padding: 0px 12px;
+	}
+	100% {
+		padding: 0px 12px;
+	}
 }
 
 @media all and (max-width: 1024px) {
-    .grid-container {
-        grid-template-columns: auto auto;
-    }
+	/* .paging {
+		text-align: center;
+	} */
 
-    .paging {
-        text-align: center;
-    }
-    .logout {
-        float: right;
-        padding-right: 0.5%;
-    }
+	.container {
+		padding: 5% 10%;
+	}
+
+	.grid-container {
+		grid-template-columns: auto auto;
+	}
+
+	#logout {
+		right: 10%;
+		top: 2%;
+	}
 }
 
 @media all and (max-width: 480px) {
-    .grid-container {
-        grid-template-columns: auto;
-    }
-    .logout {
-        font-size: 10px;
-        padding: 0%;
-    }
+	.container {
+		padding: 7% 10%;
+	}
+
+	.grid-container {
+		grid-template-columns: auto;
+	}
+
+	#logout {
+		right: 10%;
+		top: 1%;
+	}
 }

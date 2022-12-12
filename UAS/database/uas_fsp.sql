@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2022 at 08:30 AM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 7.4.2
+-- Generation Time: Dec 12, 2022 at 07:05 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -33,6 +32,18 @@ CREATE TABLE `likes` (
   `meme_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`user_username`, `meme_id`) VALUES
+(160420046, 1),
+(160420046, 2),
+(160420046, 3),
+(160420046, 6),
+(160420046, 7),
+(160420046, 8);
+
 -- --------------------------------------------------------
 
 --
@@ -41,45 +52,44 @@ CREATE TABLE `likes` (
 
 CREATE TABLE `memes` (
   `id` int(11) NOT NULL,
-  `img_url` varchar(45) NOT NULL,
-  `total_like` int(11) NOT NULL
+  `img_url` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `memes`
 --
 
-INSERT INTO `memes` (`id`, `img_url`, `total_like`) VALUES
-(1, 'https://picsum.photos/200/300', 0),
-(2, 'https://picsum.photos/200/300', 0),
-(3, 'https://picsum.photos/200/300', 0),
-(4, 'https://picsum.photos/200/300', 0),
-(5, 'https://picsum.photos/200/300', 0),
-(6, 'https://picsum.photos/200/300', 0),
-(7, 'https://picsum.photos/200/300', 0),
-(8, 'https://picsum.photos/200/300', 0),
-(9, 'https://picsum.photos/200/300', 0),
-(10, 'https://picsum.photos/200/300', 0),
-(11, 'https://picsum.photos/200/300', 0),
-(12, 'https://picsum.photos/200/300', 0),
-(13, 'https://picsum.photos/200/300', 0),
-(14, 'https://picsum.photos/200/300', 0),
-(15, 'https://picsum.photos/200/300', 0),
-(16, 'https://picsum.photos/200/300', 0),
-(17, 'https://picsum.photos/200/300', 0),
-(18, 'https://picsum.photos/200/300', 0),
-(19, 'https://picsum.photos/200/300', 0),
-(20, 'https://picsum.photos/200/300', 0),
-(21, 'https://picsum.photos/200/300', 0),
-(22, 'https://picsum.photos/200/300', 0),
-(23, 'https://picsum.photos/200/300', 0),
-(24, 'https://picsum.photos/200/300', 0),
-(25, 'https://picsum.photos/200/300', 0),
-(26, 'https://picsum.photos/200/300', 0),
-(27, 'https://picsum.photos/200/300', 0),
-(28, 'https://picsum.photos/200/300', 0),
-(29, 'https://picsum.photos/200/300', 0),
-(30, 'https://picsum.photos/200/300', 0);
+INSERT INTO `memes` (`id`, `img_url`) VALUES
+(1, 'https://picsum.photos/200/300'),
+(2, 'https://picsum.photos/200/300'),
+(3, 'https://picsum.photos/200/300'),
+(4, 'https://picsum.photos/200/300'),
+(5, 'https://picsum.photos/200/300'),
+(6, 'https://picsum.photos/200/300'),
+(7, 'https://picsum.photos/200/300'),
+(8, 'https://picsum.photos/200/300'),
+(9, 'https://picsum.photos/200/300'),
+(10, 'https://picsum.photos/200/300'),
+(11, 'https://picsum.photos/200/300'),
+(12, 'https://picsum.photos/200/300'),
+(13, 'https://picsum.photos/200/300'),
+(14, 'https://picsum.photos/200/300'),
+(15, 'https://picsum.photos/200/300'),
+(16, 'https://picsum.photos/200/300'),
+(17, 'https://picsum.photos/200/300'),
+(18, 'https://picsum.photos/200/300'),
+(19, 'https://picsum.photos/200/300'),
+(20, 'https://picsum.photos/200/300'),
+(21, 'https://picsum.photos/200/300'),
+(22, 'https://picsum.photos/200/300'),
+(23, 'https://picsum.photos/200/300'),
+(24, 'https://picsum.photos/200/300'),
+(25, 'https://picsum.photos/200/300'),
+(26, 'https://picsum.photos/200/300'),
+(27, 'https://picsum.photos/200/300'),
+(28, 'https://picsum.photos/200/300'),
+(29, 'https://picsum.photos/200/300'),
+(30, 'https://picsum.photos/200/300');
 
 -- --------------------------------------------------------
 

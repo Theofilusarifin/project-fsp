@@ -1,3 +1,11 @@
+<?php session_start();
+
+if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
+    header("Location: index.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,10 +13,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PROJECT FSP</title>
+    <!-- CSS -->
     <link rel="stylesheet" href="css/login.css">
+    <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 </head>
 
 <body>
@@ -20,12 +29,10 @@
         <main>
             <form method='post' action='api/login_process.php' id="frmLogin">
                 <div class="input">
-                    <!-- <label>Username :</label> -->
                     <input type="text" name="username" id="username" required="required">
                     <span>Username</span>
                 </div>
                 <div class="input">
-                    <!-- <label>Password :</label> -->
                     <input type="password" name="password" id="password" required="required">
                     <span>Password</span>
                 </div>
@@ -41,12 +48,14 @@
 
     <script>
         $("#frmLogin").submit((event) => {
-            console.log('masuk script')
-            event.preventDefault();
+            event.preventDefault()
 
             var fData = new FormData($("#frmLogin")[0]);
             $.ajax({
+                // URL Absolute Path
+                // url: 'https://trivialteam.000webhostapp.com/api/login_process.php',
                 url: 'api/login_process.php',
+
                 type: 'POST',
                 data: fData,
                 async: false,
@@ -55,27 +64,18 @@
                 processData: false,
                 success: (response) => {
                     response = JSON.parse(response)
+                    // If login success redirect to index
                     if (response.status == 'success') {
-                        localStorage.username = $("#username").val();
-                        window.location.href = 'index.php';
-                    } else {
+                        window.location.href = 'index.php?page=1'
+                    }
+                    // Show error message 
+                    else {
                         $('#error-message').html(response.msg)
-                        $('#error-message').hide();
-                        $('#error-message').fadeIn();
-                        setTimeout(() => {
-                            $('#error-message').fadeOut();
-                        }, 3000);
+                        $('#error-message').hide()
+                        $('#error-message').fadeIn()
                     }
                 }
             });
-        });
-        $(document).ready(function () {
-            if(localStorage.username){
-                localStorage.removeItem('username');
-            }
-            if(localStorage.idLiked){
-                localStorage.removeItem('idLiked');
-            }
         });
     </script>
 </body>

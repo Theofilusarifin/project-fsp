@@ -1,34 +1,44 @@
 <?php
+session_start();
+header('Access-Control-Allow-Origin: *');
 $mysqli = new mysqli("localhost", "root", "", "uas_fsp");
 
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: " . $mysqli->connect_error;
 }
 
-if(isset($_POST['username']) && isset($_POST['idMeme'])){
-    $username = $_POST['username'];
-    $id = $_POST['idMeme'];
+// Default Status and Message
+$status = 'error';
+$msg = 'Like Process error!';
+
+if(isset($_SESSION['user']) && isset($_POST['meme_id'])){
+    // Get passed variable
+    $username = $_SESSION['user'];
+    $meme_id = $_POST['meme_id'];
     
+    // Insert new many to many like data
     $sql = "INSERT INTO likes (user_username, meme_id) VALUES (?,?)";
     $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("ii", $username, $id);
+    $stmt->bind_param("ii", $username, $meme_id);
     $stmt->execute();
 
-    if($stmt->affected_rows > 0){
-        $sql = "UPDATE memes SET total_like = total_like + 1 WHERE id = ?";
-        $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        if($stmt->affected_rows > 0){
-            $arr = ["status" => "success", "msg" => "insert success"];
-        } else {
-            $arr = ["status" => "failed", "msg" => "update like failed"];
-        }
-    } else {
-        $arr = ["status" => "failed", "msg" => "insert failed"];
+    // Get new meme detail
+    $sql = "SELECT count(meme_id) as total_like FROM memes m LEFT JOIN likes l ON l.meme_id = m.id WHERE m.id = ? GROUP BY m.id";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i", $meme_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($row = $res->fetch_assoc()){
+        // Assign passed variable
+        $status = 'success';
+        $msg = $row['total_like'];
     }
-} else {
-    $arr = ["status" => "failed", "msg" => "no session or id memes"];
 }
-echo json_encode($arr);
+
+// Return Json
+echo json_encode(array(
+    "status" => $status,
+    "msg" => $msg,
+));
 ?>
