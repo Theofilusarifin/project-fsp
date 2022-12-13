@@ -1,10 +1,17 @@
 <?php
+session_start();
+header('Access-Control-Allow-Origin: *');
 $mysqli = new mysqli("localhost", "root", "", "uas_fsp");
 $arr = [];
 
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: " . $mysqli->connect_error;
 }
+
+// Default Status and Message
+$status = 'error';
+$msg = 'Pagination error!';
+
 if (isset($_POST['command'])) {
     $command = $_POST['command'];
     if ($command == 'jumpage') {
@@ -79,5 +86,9 @@ if (isset($_POST['command'])) {
     $status = "failed";
     $arr = ["status" => $status, "msg" => "no command to be executed"];
 }
-echo json_encode($arr);
-?>
+
+// Return Json
+echo json_encode(array(
+    "status" => $status,
+    "msg" => $msg
+));

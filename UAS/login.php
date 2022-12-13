@@ -66,7 +66,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
                     response = JSON.parse(response)
                     // If login success redirect to index
                     if (response.status == 'success') {
-                        window.location.href = 'index.php?page=1'
+                        window.location.href = 'index.php'
                     }
                     // Show error message 
                     else {

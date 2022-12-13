@@ -28,15 +28,24 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
         <div class="grid-container" id="card-container">
             <!-- Get data from ajax -->
         </div>
-        <!-- <div class="paging">
-            <i class="fa fa-arrow-left"></i>
-            <span class="pageContent"></span>
-            <i class="fa fa-arrow-right"></i>
-        </div> -->
+        <div class="pagination-container">
+            <div class="pagination" id="pagination">
+                <!-- Get data from ajax -->
+            </div>
+        </div>
     </div>
 
     <script>
-        $(document).ready(() => {
+        // page 1 as default
+        var page = 1
+        // Document ready
+        $(() => {
+            // Get pagination on page 1 as default
+            pagination(page)
+        });
+
+        // Get memes function
+        const get_memes = (page) => {
             $.ajax({
                 // URL Absolute Path
                 // url: 'https://trivialteam.000webhostapp.com/api/get_memes.php',
@@ -45,7 +54,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
                 type: 'POST',
                 data: {
                     data_page: 12,
-                    page: <?php echo $_GET['page'] ?>,
+                    page: page,
                 },
 
                 success: (response) => {
@@ -80,7 +89,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
                     }
                 }
             });
-        });
+        }
 
         // Like Function
         const like = (meme_id) => {
@@ -140,24 +149,60 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
             });
         };
 
-        // function page(dataP) {
-        //     var idLike;
-        //     if (localStorage.idLiked) {
-        //         idLike = JSON.parse(localStorage.idLiked);
-        //     } else {
-        //         idLike = '1';
-        //     }
-        //     $.post("api/paging.php", {
-        //             command: 'showContent',
-        //             page: dataP,
-        //             idLiked: idLike
-        //         })
-        //         .done(function(data) {
-        //             var jData = JSON.parse(data);
-        //             $(".grid-container").html("");
-        //             setLikes(jData.msg);
-        //         });
-        // }
+        // Pagination Function
+        const pagination = (selected_page) => {
+            $.ajax({
+                // URL Absolute Path
+                // url: 'https://trivialteam.000webhostapp.com/api/count_memes.php',
+                url: 'api/count_memes.php',
+
+                type: 'POST',
+                data: {},
+                success: (response) => {
+                    var response = JSON.parse(response)
+                    // Success retrieve data
+                    if (response.status == 'success') {
+                        // Define variable
+                        total_data = response.msg
+                        var max_page = total_data / 12
+                        page = selected_page;
+
+                        // Get memes on selected page
+                        get_memes(page)
+                        var temp = ""
+
+                        // Show left arrow
+                        if (page > 1) {
+                            temp += `<a><i class="fa-solid fa-arrow-left pagination-arrow" onclick="pagination(${page-1})"></i></a>`
+                        } else {
+                            temp += `<a class="arrow-disabled"><i class="fa-solid fa-arrow-left pagination-arrow arrow-disabled"></i></a>`
+                        }
+                        // Show before page is available
+                        if (page - 1 > 0) {
+                            temp += `<a onclick="pagination(${page-1})">${page-1}</a>`
+                        }
+                        // Show current page
+                        temp += `<a class="active">${page}</a>`
+                        // Show next page is available
+                        if (page + 1 < max_page + 1) {
+                            temp += `<a onclick="pagination(${page+1})">${page+1}</a>`
+                        }
+                        // Show right arrow
+                        if (page < max_page) {
+                            temp += `<a><i class="fa-solid fa-arrow-right pagination-arrow" onclick="pagination(${page+1})"></i></a>`
+                        } else {
+                            temp += `<a class="arrow-disabled"><i class="fa-solid fa-arrow-right pagination-arrow arrow-disabled"></i></a>`
+                        }
+                        // Update pagination using jquery
+                        $("#pagination").html(temp)
+                    }
+                    // Show error message 
+                    else {
+                        alert(response.msg)
+                    }
+                }
+            });
+        }
     </script>
 </body>
 
