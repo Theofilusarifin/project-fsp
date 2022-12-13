@@ -53,8 +53,8 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             var fData = new FormData($("#frmLogin")[0]);
             $.ajax({
                 // URL Absolute Path
-                // url: 'https://trivialteam.000webhostapp.com/api/login_process.php',
-                url: 'api/login_process.php',
+                url: 'https://trivialteam.000webhostapp.com/api/login_process.php',
+                // url: 'api/login_process.php',
 
                 type: 'POST',
                 data: fData,

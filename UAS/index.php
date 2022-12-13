@@ -48,8 +48,8 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
         const get_memes = (page) => {
             $.ajax({
                 // URL Absolute Path
-                // url: 'https://trivialteam.000webhostapp.com/api/get_memes.php',
-                url: 'api/get_memes.php',
+                url: 'https://trivialteam.000webhostapp.com/api/get_memes.php',
+                // url: 'api/get_memes.php',
 
                 type: 'POST',
                 data: {
@@ -97,8 +97,8 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
                 // Add like to database using ajax
                 $.ajax({
                     // URL Absolute Path
-                    // url: 'https://trivialteam.000webhostapp.com/api/like_process.php',
-                    url: 'api/like_process.php',
+                    url: 'https://trivialteam.000webhostapp.com/api/like_process.php',
+                    // url: 'api/like_process.php',
 
                     type: 'POST',
                     data: {
@@ -131,8 +131,8 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
         const logout = () => {
             $.ajax({
                 // URL Absolute Path
-                url: 'api/logout_process.php',
-                // url: 'https://trivialteam.000webhostapp.com/api/logout_process.php',
+                url: 'https://trivialteam.000webhostapp.com/api/logout_process.php',
+                // url: 'api/logout_process.php',
 
                 data: {},
                 success: (response) => {
@@ -153,8 +153,8 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
         const pagination = (selected_page) => {
             $.ajax({
                 // URL Absolute Path
-                // url: 'https://trivialteam.000webhostapp.com/api/count_memes.php',
-                url: 'api/count_memes.php',
+                url: 'https://trivialteam.000webhostapp.com/api/count_memes.php',
+                // url: 'api/count_memes.php',
 
                 type: 'POST',
                 data: {},
