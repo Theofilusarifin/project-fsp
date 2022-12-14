@@ -40,9 +40,75 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
         var page = 1
         // Document ready
         $(() => {
-            // Get pagination on page 1 as default
-            pagination(page)
+            // Default size is 0
+            localStorage.setItem("total_data", 0);
+            // Get total data
+            count_memes()
         });
+
+        // Get total memes for pagination function
+        const count_memes = () => {
+            $.ajax({
+                // URL Absolute Path
+                url: 'https://trivialteam.000webhostapp.com/api/count_memes.php',
+                // url: 'api/count_memes.php',
+
+                type: 'POST',
+                data: {},
+                success: (response) => {
+                    var response = JSON.parse(response)
+                    // Success retrieve data
+                    if (response.status == 'success') {
+                        // Define variable
+                        total_data = response.msg
+                        // Set total data on local storage so no need to querry again
+                        localStorage.setItem("total_data", total_data);
+                        // Get pagination on page 1 as default
+                        pagination(page)
+                    }
+                    // Show error message 
+                    else {
+                        alert(response.msg)
+                    }
+                }
+            });
+        }
+
+        // Pagination Function
+        const pagination = (selected_page) => {
+            var total_data = localStorage.getItem("total_data");
+            var max_page = total_data / 12
+            page = selected_page;
+
+            // Get memes on selected page
+            get_memes(page)
+            var temp = ""
+
+            // Show left arrow
+            if (page > 1) {
+                temp += `<a><i class="fa-solid fa-arrow-left pagination-arrow" onclick="pagination(${page-1})"></i></a>`
+            } else {
+                temp += `<a class="arrow-disabled"><i class="fa-solid fa-arrow-left pagination-arrow arrow-disabled"></i></a>`
+            }
+            // Show before page is available
+            if (page - 1 > 0) {
+                temp += `<a onclick="pagination(${page-1})">${page-1}</a>`
+            }
+            // Show current page
+            temp += `<a class="active">${page}</a>`
+            // Show next page is available
+            if (page + 1 < max_page + 1) {
+                temp += `<a onclick="pagination(${page+1})">${page+1}</a>`
+            }
+            // Show right arrow
+            if (page < max_page) {
+                temp += `<a><i class="fa-solid fa-arrow-right pagination-arrow" onclick="pagination(${page+1})"></i></a>`
+            } else {
+                temp += `<a class="arrow-disabled"><i class="fa-solid fa-arrow-right pagination-arrow arrow-disabled"></i></a>`
+            }
+            // Update pagination using jquery
+            $("#pagination").html(temp)
+        }
 
         // Get memes function
         const get_memes = (page) => {
@@ -59,7 +125,6 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
 
                 success: (response) => {
                     var response = JSON.parse(response)
-
                     // Success retrieve data
                     if (response.status == 'success') {
                         var temp = ''
@@ -105,7 +170,6 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
                         meme_id: meme_id,
                     },
                     success: (response) => {
-
                         var response = JSON.parse(response)
                         // Success retrieve data
                         if (response.status == 'success') {
@@ -148,61 +212,6 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
                 }
             });
         };
-
-        // Pagination Function
-        const pagination = (selected_page) => {
-            $.ajax({
-                // URL Absolute Path
-                url: 'https://trivialteam.000webhostapp.com/api/count_memes.php',
-                // url: 'api/count_memes.php',
-
-                type: 'POST',
-                data: {},
-                success: (response) => {
-                    var response = JSON.parse(response)
-                    // Success retrieve data
-                    if (response.status == 'success') {
-                        // Define variable
-                        total_data = response.msg
-                        var max_page = total_data / 12
-                        page = selected_page;
-
-                        // Get memes on selected page
-                        get_memes(page)
-                        var temp = ""
-
-                        // Show left arrow
-                        if (page > 1) {
-                            temp += `<a><i class="fa-solid fa-arrow-left pagination-arrow" onclick="pagination(${page-1})"></i></a>`
-                        } else {
-                            temp += `<a class="arrow-disabled"><i class="fa-solid fa-arrow-left pagination-arrow arrow-disabled"></i></a>`
-                        }
-                        // Show before page is available
-                        if (page - 1 > 0) {
-                            temp += `<a onclick="pagination(${page-1})">${page-1}</a>`
-                        }
-                        // Show current page
-                        temp += `<a class="active">${page}</a>`
-                        // Show next page is available
-                        if (page + 1 < max_page + 1) {
-                            temp += `<a onclick="pagination(${page+1})">${page+1}</a>`
-                        }
-                        // Show right arrow
-                        if (page < max_page) {
-                            temp += `<a><i class="fa-solid fa-arrow-right pagination-arrow" onclick="pagination(${page+1})"></i></a>`
-                        } else {
-                            temp += `<a class="arrow-disabled"><i class="fa-solid fa-arrow-right pagination-arrow arrow-disabled"></i></a>`
-                        }
-                        // Update pagination using jquery
-                        $("#pagination").html(temp)
-                    }
-                    // Show error message 
-                    else {
-                        alert(response.msg)
-                    }
-                }
-            });
-        }
     </script>
 </body>
 
